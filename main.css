@@ -1,0 +1,150 @@
+/*******w******** 
+    
+    Name: Kurtis Park
+    Date: March 1st 2024
+    Description: A3 Blog CSS
+
+****************/
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.containerBlog {
+    margin: 0px 0px 0px 20px; /* top right bottom left */
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.blog-post-title {
+    margin-bottom: 5px;
+}
+
+.blog-post-edit {
+    color: #28a745;
+    margin-right: 10px;
+}
+
+.blog-post-date {
+    color: #6c757d;
+}
+
+.blog-post-content {
+    line-height: 1.5;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* header.php css */
+
+.navigationSection h2 {
+    padding-left: 20px;
+}
+
+.navigationSection {
+    color: #333;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.container {
+    list-style: none;
+    margin: 0;
+    padding: 25px 10px 0px 10px; /* top right bottom left */
+    display: flex;
+}
+
+.container li {
+    display: inline;
+    margin-right: 15px;
+}
+
+.container a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.container a:hover {
+    color: #0056b3;
+    cursor: pointer;
+}
+
+/* show.php css */
+
+.container_show{
+    list-style: none;
+    margin: 0;
+    padding: 0px 10px 0px 15px; /* top right bottom left */
+    display: block;
+}
+
+.blog-post-title {
+    color: #333;
+    padding-bottom: 2px;
+}
+
+.blog-post-edit {
+    color: #28a745;
+    margin-right: 10px;
+}
+
+.blog-post-date {
+    color: #6c757d;
+}
+
+.blog-post-content {
+    line-height: 1.6;
+    padding-top: 10px;
+}
+
+/* edit.php css */
+
+.container_edit {
+    list-style: none;
+    margin: 0px;
+    padding: 0px 10px 0px 15px; /* top right bottom left */
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+button {
+    cursor: pointer;
+}
