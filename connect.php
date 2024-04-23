@@ -4,7 +4,7 @@
      define('DB_PASS','gorgonzola7!');     
      
     //  PDO is PHP Data Objects
-    //  mysqli <-- BAD. 
+    //  mysqli <-- BAD. P
     //  PDO <-- GOOD.
      try {
          // Try creating new PDO connection to MySQL.
