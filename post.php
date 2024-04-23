@@ -11,17 +11,27 @@
 require('authenticate.php');
 require('connect.php');
 
+// Fetch the highest post_id from the database
+$query = "SELECT MAX(post_id) AS max_post_id FROM blog";
+$result = $db->query($query);
+$row = $result->fetch(PDO::FETCH_ASSOC);
+$max_post_id = $row['max_post_id'];
+
 if($_POST && !empty($_POST['title']) && !empty($_POST['content']))
 {
     // Sanitize user input of all special characters
     $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
+    // Increment the max_post_id to get the next available post_id
+    $next_post_id = $max_post_id + 1;
+
     // Build the parameterized SQL query and bind to the sanitized values
-    $query = "INSERT INTO blog (title, content) VALUES (:title, :content)";
+    $query = "INSERT INTO blog (post_id, title, content) VALUES (:post_id, :title, :content)";
     $statement = $db->prepare($query);
 
     // Bind values to the parameters
+    $statement->bindValue(':post_id', $next_post_id);
     $statement->bindValue(':title', $title);
     $statement->bindValue(':content', $content);
 
@@ -32,7 +42,7 @@ if($_POST && !empty($_POST['title']) && !empty($_POST['content']))
         echo "Success";
     }
 
-    header("Location: index.php?{$id}");
+    header("Location: index.php");
     exit;
 }
 
