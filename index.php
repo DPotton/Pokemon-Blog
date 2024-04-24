@@ -69,25 +69,31 @@ $statement->execute();
         <?php exit; endif; ?>
 
         <?php while($row = $statement->fetch()): ?>
-            <h3 class="blog-post-title">
-                <a href="show.php?id=<?=$row['id']?>"><?=$row['title']?></a>
-            </h3>
-            <small><a href="edit.php?id=<?=$row['id']?>" class="blog-post-edit">Edit</a></small>
-            <small><a href="delete.php?id=<?=$row['id']?>" class="blog-post-delete">Delete</a></small>
-            <small class="blog-post-date">
-                Caught on: <time datetime="<?=$row['date_posted']?>"><?=
-                date_format(date_create($row['date_posted']), 'F j, Y G:i') ?><time>
-                &ensp;
-            </small> <br>
-            <p class="blog-post-content">
-                <?php if(strlen($row['content']) > 200) : ?>
-                    <?=substr($row['content'], 0, 200)?>
-                    <a href="show.php?id=<?=$row['id']?>">&nbsp;Show More...</a>
-                <?php else: ?>
-                    <?= $row['content'] ?>
-                <?php endif ?>
-            </p><br>
-        <?php endwhile; ?>
+    <h3 class="blog-post-title">
+        <a href="show.php?id=<?=$row['id']?>"><?=$row['title']?></a>
+    </h3>
+    <!-- Display the uploaded photo -->
+    <?php if (!empty($row['photo'])): ?>
+        <img src="<?=$row['photo']?>" alt="Uploaded Photo">
+    <?php endif; ?>
+    <small><a href="edit.php?id=<?=$row['id']?>" class="blog-post-edit">Edit</a></small>
+    <small><a href="delete.php?id=<?=$row['id']?>" class="blog-post-delete">Delete</a></small>
+    <small class="blog-post-date">
+        Caught on: <time datetime="<?=$row['date_posted']?>">
+            <?=date_format(date_create($row['date_posted']), 'F j, Y G:i') ?>
+        <time>
+        &ensp;
+    </small> <br>
+    <p class="blog-post-content">
+        <?php if(strlen($row['content']) > 200) : ?>
+            <?=substr($row['content'], 0, 200)?>
+            <a href="show.php?id=<?=$row['id']?>">&nbsp;Show More...</a>
+        <?php else: ?>
+            <?= $row['content'] ?>
+        <?php endif ?>
+    </p><br>
+<?php endwhile; ?>
+
     </main>
     </div>
 

@@ -56,6 +56,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                 if (move_uploaded_file($tmp_file, $upload_directory . $client_filename)) {
                     // File uploaded successfully
                     echo "File uploaded successfully.";
+                
+                    // Store the file path/name in the database
+                    $photo_path = $upload_directory . $client_filename;
+                    $query = "INSERT INTO blog (post_id, title, content, photo) VALUES (:post_id, :title, :content, :photo)";
+                    $statement = $db->prepare($query);
+                    $statement->bindValue(':post_id', $next_post_id);
+                    $statement->bindValue(':title', $title);
+                    $statement->bindValue(':content', $content);
+                    $statement->bindValue(':photo', $photo_path);
+                    $statement->execute();
                 } else {
                     // Error while uploading file
                     echo "Error uploading file.";
