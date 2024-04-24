@@ -61,14 +61,14 @@ else
                     <textarea name="content" id="content" cols="80" rows="15" minlength="1" required><?=$blog['content']?></textarea>
                 </div>
 
-                <button type="submit" class="button primary">Update Blog</button>
+                <button type="submit" class="button primary">Update Comment!</button>
                 
             </form> 
             <form method="POST" action="delete.php?id=<?=$blog['id']?>">
                   <button id="form_del" type='submit' class="button secondary">Delete</button>
               </form>
         <?php else: ?>
-            <p>No blog selected.</p>
+            <p>No post selected.</p>
         <?php endif ?>   
     </main>
 

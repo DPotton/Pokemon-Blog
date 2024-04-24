@@ -56,7 +56,7 @@ else
             <?=$blog['content']?>
         </p>
         <?php else: ?>
-            <p>No blog selected.</p>
+            <p>No post selected.</p>
         <?php endif ?>
     </main>
 
