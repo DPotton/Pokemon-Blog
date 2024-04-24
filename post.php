@@ -70,7 +70,7 @@ if($_POST && !empty($_POST['title']) && !empty($_POST['content']))
             </div>
 
             <div class="form-group">
-                <label for="content">Pokemon Opinions!</label>
+                <label for="content">Toss in some words!</label>
                 <textarea name="content" id="content" cols="80" rows="15" minlength="1" required></textarea>
             </div>
 

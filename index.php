@@ -9,7 +9,6 @@
 ****************/
 
 
-//
 require('connect.php');
 
 // Determine the sorting order based on the 'sort' parameter in the URL
@@ -23,8 +22,18 @@ if (!in_array($sort, $validSorts)) {
 }
 
 // SQL query modified to include sorting order
-$query = "SELECT * FROM blog ORDER BY date_posted $sort LIMIT 5";
+$query = "SELECT * FROM blog ORDER BY date_posted $sort";
+$searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+if (!empty($searchTerm)) {
+    $query = "SELECT * FROM blog WHERE title LIKE :search OR content LIKE :search OR content LIKE :search ORDER BY date_posted $sort";
+}
+$query .= " LIMIT 5";
+
 $statement = $db->prepare($query);
+if (!empty($searchTerm)) {
+    $searchTerm = "%$searchTerm%";
+    $statement->bindParam(':search', $searchTerm, PDO::PARAM_STR);
+}
 $statement->execute();
 ?>
 
@@ -48,6 +57,11 @@ $statement->execute();
             <a href="?sort=asc">Ascending</a> |
             <a href="?sort=desc">Descending</a>
         </div>
+        <form action="" method="GET">
+            <label for="search">Search Comments:</label>
+            <input type="text" id="search" name="search" value="<?= htmlspecialchars($searchTerm) ?>">
+            <button type="submit">Search</button>
+        </form>
         <?php if($statement->rowCount() == 0) : ?>
             <div class="center-text py-1">
                 <p>No PokéEntries yet!</p>
