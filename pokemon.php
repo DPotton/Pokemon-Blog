@@ -16,6 +16,13 @@
 
         </ul>
     </nav>
+
+    <form action="pokemon.php" method="GET">
+        <label for="search">Search Pokemon:</label>
+        <input type="text" id="search" name="search">
+        <button type="submit">Search</button>
+    </form>
+    
 </body>
 </html>
 
@@ -29,10 +36,14 @@ try {
     $validSortOptions = ['type', 'name']; // Valid sorting options
     $sortBy = in_array($sortBy, $validSortOptions) ? $sortBy : 'pokemonID';
 
-    // Step 2: Retrieve data from the "pokemon" table with sorting
-    $sql = "SELECT * FROM pokemon ORDER BY $sortBy";
-    $stmt = $db->query($sql);
+    // Step 2: Handle search
+    $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
+    // Step 3: Retrieve data from the "pokemon" table with sorting and searching
+    $sql = "SELECT * FROM pokemon WHERE name LIKE :searchTerm ORDER BY $sortBy";
+    $stmt = $db->prepare($sql);
+    $stmt->bindValue(':searchTerm', "%$searchTerm%");
+    $stmt->execute();
     // Step 3: Display the data on your PHP page
     if ($stmt->rowCount() > 0) {
         echo "<table border='1'>";
