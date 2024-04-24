@@ -12,16 +12,20 @@
 //
 require('connect.php');
 
-// SQL is writen as a String.
-// Selects the five most recent blogs posted and displays them 
-$query = "SELECT * FROM blog ORDER BY date_posted DESC LIMIT 5";
+// Determine the sorting order based on the 'sort' parameter in the URL
+$sort = isset($_GET['sort']) ? $_GET['sort'] : 'desc'; // Default to descending order
 
-// A PDO::Statement is prepared from the query
+// Validate the sorting order
+$validSorts = array('asc', 'desc');
+if (!in_array($sort, $validSorts)) {
+    // If an invalid sorting order is provided, fallback to descending order
+    $sort = 'desc';
+}
+
+// SQL query modified to include sorting order
+$query = "SELECT * FROM blog ORDER BY date_posted $sort LIMIT 5";
 $statement = $db->prepare($query);
-
-//Execution on the DB server is delayed until we execute().
 $statement->execute();
-
 ?>
 
 <!DOCTYPE html>
@@ -39,32 +43,37 @@ $statement->execute();
 
     <main class="containerBlog">
         <h2>Gotta Read 'Em All!</h2>
-            <?php if($statement->rowCount() == 0) : ?>
+        <div class="sort-links">
+            Sort by date:
+            <a href="?sort=asc">Ascending</a> |
+            <a href="?sort=desc">Descending</a>
+        </div>
+        <?php if($statement->rowCount() == 0) : ?>
             <div class="center-text py-1">
                 <p>No PokéEntries yet!</p>
             </div>
         <?php exit; endif; ?>
 
-    <?php while($row = $statement->fetch()): ?>
-        <h3 class="blog-post-title">
-            <a href="show.php?id=<?=$row['id']?>"><?=$row['title']?></a>
-        </h3>
-        <small><a href="edit.php?id=<?=$row['id']?>" class="blog-post-edit">Edit</a></small>
-        <small><a href="delete.php?id=<?=$row['id']?>" class="blog-post-delete">Delete</a></small>
-        <small class="blog-post-date">
-            Caught on: <time datetime="<?=$row['date_posted']?>"><?=
-            date_format(date_create($row['date_posted']), 'F j, Y G:i') ?><time>
-            &ensp;
-        </small> <br>
-        <p class="blog-post-content">
-            <?php if(strlen($row['content']) > 200) : ?>
-                <?=substr($row['content'], 0, 200)?>
-                <a href="show.php?id=<?=$row['id']?>">&nbsp;Show More...</a>
-            <?php else: ?>
-                <?= $row['content'] ?>
-            <?php endif ?>
-        </p><br>
-    <?php endwhile; ?>
+        <?php while($row = $statement->fetch()): ?>
+            <h3 class="blog-post-title">
+                <a href="show.php?id=<?=$row['id']?>"><?=$row['title']?></a>
+            </h3>
+            <small><a href="edit.php?id=<?=$row['id']?>" class="blog-post-edit">Edit</a></small>
+            <small><a href="delete.php?id=<?=$row['id']?>" class="blog-post-delete">Delete</a></small>
+            <small class="blog-post-date">
+                Caught on: <time datetime="<?=$row['date_posted']?>"><?=
+                date_format(date_create($row['date_posted']), 'F j, Y G:i') ?><time>
+                &ensp;
+            </small> <br>
+            <p class="blog-post-content">
+                <?php if(strlen($row['content']) > 200) : ?>
+                    <?=substr($row['content'], 0, 200)?>
+                    <a href="show.php?id=<?=$row['id']?>">&nbsp;Show More...</a>
+                <?php else: ?>
+                    <?= $row['content'] ?>
+                <?php endif ?>
+            </p><br>
+        <?php endwhile; ?>
     </main>
     </div>
 
@@ -72,4 +81,3 @@ $statement->execute();
 
 </body>
 </html>
-

@@ -19,8 +19,6 @@
 </body>
 </html>
 
-
-
 <?php
 
 require('connect.php');
