@@ -38,7 +38,7 @@ $statement->execute();
     <?php include('nav.php'); ?>
 
     <main class="containerBlog">
-        <h2>Recently posted blog entries</h2>
+        <h2>See what others have to say!</h2>
             <?php if($statement->rowCount() == 0) : ?>
             <div class="center-text py-1">
                 <p>No blog entries yet!</p>
@@ -50,6 +50,7 @@ $statement->execute();
             <a href="show.php?id=<?=$row['id']?>"><?=$row['title']?></a>
         </h3>
         <small><a href="edit.php?id=<?=$row['id']?>" class="blog-post-edit">edit</a></small>
+        <small><a href="delete.php?id=<?=$row['id']?>" class="blog-post-delete">delete</a></small>
         <small class="blog-post-date">
             Posted on <time datetime="<?=$row['date_posted']?>"><?=
             date_format(date_create($row['date_posted']), 'F j, Y G:i') ?><time>
@@ -58,7 +59,7 @@ $statement->execute();
         <p class="blog-post-content">
             <?php if(strlen($row['content']) > 200) : ?>
                 <?=substr($row['content'], 0, 200)?>
-                <a href="show.php?id=<?=$row['id']?>">&nbsp;Read Full Post...</a>
+                <a href="show.php?id=<?=$row['id']?>">&nbsp;Read More...</a>
             <?php else: ?>
                 <?= $row['content'] ?>
             <?php endif ?>
