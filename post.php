@@ -17,35 +17,56 @@ $result = $db->query($query);
 $row = $result->fetch(PDO::FETCH_ASSOC);
 $max_post_id = $row['max_post_id'];
 
-if($_POST && !empty($_POST['title']) && !empty($_POST['content']))
-{
-    // Sanitize user input of all special characters
-    $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    if (!empty($_POST['title']) && !empty($_POST['content'])) {
+        // Sanitize user input of all special characters
+        $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    // Increment the max_post_id to get the next available post_id
-    $next_post_id = $max_post_id + 1;
+        // Increment the max_post_id to get the next available post_id
+        $next_post_id = $max_post_id + 1;
 
-    // Build the parameterized SQL query and bind to the sanitized values
-    $query = "INSERT INTO blog (post_id, title, content) VALUES (:post_id, :title, :content)";
-    $statement = $db->prepare($query);
+        // Build the parameterized SQL query and bind to the sanitized values
+        $query = "INSERT INTO blog (post_id, title, content) VALUES (:post_id, :title, :content)";
+        $statement = $db->prepare($query);
 
-    // Bind values to the parameters
-    $statement->bindValue(':post_id', $next_post_id);
-    $statement->bindValue(':title', $title);
-    $statement->bindValue(':content', $content);
+        // Bind values to the parameters
+        $statement->bindValue(':post_id', $next_post_id);
+        $statement->bindValue(':title', $title);
+        $statement->bindValue(':content', $content);
 
-    // Execute the insert
-    // execute() will check for possible SQL injection and remove if necessary
-    if($statement->execute())
-    {
-        echo "Success";
+        // Execute the insert
+        // execute() will check for possible SQL injection and remove if necessary
+        if ($statement->execute()) {
+            // File upload handling
+            if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+                // File details
+                $client_filename = $_FILES["image"]["name"];
+                $tmp_file = $_FILES["image"]["tmp_name"];
+
+                // Directory to upload
+                $upload_directory = 'uploads/';
+
+                // Create uploads directory if it doesn't exist
+                if (!file_exists($upload_directory)) {
+                    mkdir($upload_directory, 0777, true);
+                }
+
+                // Move uploaded file to uploads directory
+                if (move_uploaded_file($tmp_file, $upload_directory . $client_filename)) {
+                    // File uploaded successfully
+                    echo "File uploaded successfully.";
+                } else {
+                    // Error while uploading file
+                    echo "Error uploading file.";
+                }
+            }
+            echo "Success";
+            header("Location: index.php");
+            exit;
+        }
     }
-
-    header("Location: index.php");
-    exit;
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -62,20 +83,26 @@ if($_POST && !empty($_POST['title']) && !empty($_POST['content']))
         <?php include('nav.php'); ?>
 
     <main class="container_edit" id="create-post">
-        <form action="post.php" method="POST">
-            <h2>Create a new Post for other fans to see!</h2>
-            <div class="form-group">
-                <label for="title">Add your Title!</label>
-                <input type="text" name="title" id="title" minlength="1" required>
-            </div>
+    <form action="post.php" method="POST" enctype="multipart/form-data">
+    <h2>Create a new Post for other fans to see!</h2>
+    <div class="form-group">
+        <label for="title">Add your Title!</label>
+        <input type="text" name="title" id="title" minlength="1" required>
+    </div>
 
-            <div class="form-group">
-                <label for="content">Toss in some words!</label>
-                <textarea name="content" id="content" cols="80" rows="15" minlength="1" required></textarea>
-            </div>
+    <div class="form-group">
+        <label for="content">Toss in some words!</label>
+        <textarea name="content" id="content" cols="80" rows="15" minlength="1" required></textarea>
+    </div>
 
-            <button type="submit" class="button-primary">Submit!</button>
-        </form>    
+    <div class="form-group">
+        <label for="image">Upload an Image</label>
+        <input type="file" name="image" id="image">
+    </div>
+
+    <button type="submit" class="button-primary" name="submit">Submit!</button>
+</form>
+
     </main>
 
     <?php include('footer.php'); ?>

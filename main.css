@@ -26,6 +26,12 @@ h1, h2, h3 {
     color: #333;
 }
 
+li
+{
+    list-style: none;
+    display: inline;
+}
+
 a {
     color: #007BFF;
     text-decoration: none;
