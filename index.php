@@ -31,17 +31,17 @@ $statement->execute();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
-    <title>My Blog! - Home Page</title>
+    <title>PokéBlog! - Home Page</title>
 </head>
 <body>
 
     <?php include('nav.php'); ?>
 
     <main class="containerBlog">
-        <h2>See what others have to say!</h2>
+        <h2>Gotta Read 'Em All!</h2>
             <?php if($statement->rowCount() == 0) : ?>
             <div class="center-text py-1">
-                <p>No blog entries yet!</p>
+                <p>No PokéEntries yet!</p>
             </div>
         <?php exit; endif; ?>
 
@@ -49,25 +49,27 @@ $statement->execute();
         <h3 class="blog-post-title">
             <a href="show.php?id=<?=$row['id']?>"><?=$row['title']?></a>
         </h3>
-        <small><a href="edit.php?id=<?=$row['id']?>" class="blog-post-edit">edit</a></small>
-        <small><a href="delete.php?id=<?=$row['id']?>" class="blog-post-delete">delete</a></small>
+        <small><a href="edit.php?id=<?=$row['id']?>" class="blog-post-edit">Edit</a></small>
+        <small><a href="delete.php?id=<?=$row['id']?>" class="blog-post-delete">Delete</a></small>
         <small class="blog-post-date">
-            Posted on <time datetime="<?=$row['date_posted']?>"><?=
+            Caught on: <time datetime="<?=$row['date_posted']?>"><?=
             date_format(date_create($row['date_posted']), 'F j, Y G:i') ?><time>
             &ensp;
         </small> <br>
         <p class="blog-post-content">
             <?php if(strlen($row['content']) > 200) : ?>
                 <?=substr($row['content'], 0, 200)?>
-                <a href="show.php?id=<?=$row['id']?>">&nbsp;Read More...</a>
+                <a href="show.php?id=<?=$row['id']?>">&nbsp;Show More...</a>
             <?php else: ?>
                 <?= $row['content'] ?>
             <?php endif ?>
         </p><br>
     <?php endwhile; ?>
     </main>
+    </div>
 
     <?php include('footer.php'); ?>
 
 </body>
 </html>
+
