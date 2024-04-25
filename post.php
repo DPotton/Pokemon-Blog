@@ -1,17 +1,21 @@
 <?php
+// Define an array of question prompts
+$questionPrompts = [
+    "What's your favorite Pokémon and why?",
+    "What was your first ever starter Pokémon?",
+    "What would be the best Pokémon to add to real life?",
+    "Which Pokémon game is your all-time favorite?",
+    "Do you have a shiny Goomy?"
+];
 
-/*******w******** 
-    
-    Name: Dylan Potton
-    Date: 4/22/2024
-    Description: Project - Final
+// Randomly select a question prompt
+$randomPrompt = $questionPrompts[array_rand($questionPrompts)];
 
-****************/
-
-require('authenticate.php');
-require('connect.php');
-
+// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    require('authenticate.php');
+    require('connect.php');
+
     if (!empty($_POST['title']) && !empty($_POST['content'])) {
         // Sanitize user input of all special characters
         $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -57,7 +61,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         echo "Title and content are required.";
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -75,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 
     <main class="container_edit" id="create-post">
         <form action="post.php" method="POST" enctype="multipart/form-data">
-            <h2>Create a new Post for other fans to see!</h2>
+            <h2><?php echo $randomPrompt; ?></h2> <!-- Display random question prompt -->
             <div class="form-group">
                 <label for="title">Add your Title!</label>
                 <input type="text" name="title" id="title" minlength="1" required>

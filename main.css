@@ -68,7 +68,13 @@ footer {
     width: 100%;
 }
 
-/* header.php css */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
 
 .navigationSection h2 {
     padding-left: 20px;
@@ -84,7 +90,7 @@ footer {
 .container {
     list-style: none;
     margin: 0;
-    padding: 25px 10px 0px 10px; /* top right bottom left */
+    padding: 25px 10px 0px 10px; 
     display: flex;
 }
 
