@@ -27,7 +27,7 @@ $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 if (!empty($searchTerm)) {
     $query = "SELECT * FROM blog WHERE title LIKE :search OR content LIKE :search OR content LIKE :search ORDER BY date_posted $sort";
 }
-$query .= " LIMIT 5";
+$query .= " LIMIT 10";
 
 $statement = $db->prepare($query);
 if (!empty($searchTerm)) {
