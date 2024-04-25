@@ -17,47 +17,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-        // Build the parameterized SQL query and bind to the sanitized values
-        $query = "INSERT INTO blog (title, content) VALUES (:title, :content)";
-        $statement = $db->prepare($query);
+        // File upload handling
+        if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+            $client_filename = $_FILES["image"]["name"];
+            $tmp_file = $_FILES["image"]["tmp_name"];
+            $upload_directory = 'uploads/';
 
-        // Bind values to the parameters
-        $statement->bindValue(':title', $title);
-        $statement->bindValue(':content', $content);
-
-        // Execute the insert
-        if ($statement->execute()) {
-            // File upload handling
-            if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
-                $client_filename = $_FILES["image"]["name"];
-                $tmp_file = $_FILES["image"]["tmp_name"];
-                $upload_directory = 'uploads/';
-
-                if (!file_exists($upload_directory)) {
-                    mkdir($upload_directory, 0777, true);
-                }
-
-                if (move_uploaded_file($tmp_file, $upload_directory . $client_filename)) {
-                    $photo_path = $upload_directory . $client_filename;
-                    $query = "UPDATE blog SET photo = :photo WHERE title = :title";
-                    $statement = $db->prepare($query);
-                    $statement->bindValue(':photo', $photo_path);
-                    $statement->bindValue(':title', $title);
-                    $statement->execute();
-                } else {
-                    echo "Error uploading file.";
-                }
+            if (!file_exists($upload_directory)) {
+                mkdir($upload_directory, 0777, true);
             }
-            // Redirect after successful submission
-            header("Location: index.php");
-            exit;
+
+            $photo_path = $upload_directory . $client_filename; // Full path including directory
+
+            if (move_uploaded_file($tmp_file, $photo_path)) {
+                // Build the param SQL query and bind to the sanitized values, including the image path
+                $query = "INSERT INTO blog (title, content, images) VALUES (:title, :content, :images)";
+                $statement = $db->prepare($query);
+
+                // Bind values to the parameters, including the image path
+                $statement->bindValue(':title', $title);
+                $statement->bindValue(':content', $content);
+                $statement->bindValue(':images', $photo_path); // Bind the full image path
+
+                // Execute the insert
+                if ($statement->execute()) {
+                    // Redirect after successful submission
+                    header("Location: index.php");
+                    exit;
+                } else {
+                    echo "Error executing SQL query.";
+                }
+            } else {
+                echo "Error uploading file.";
+            }
         } else {
-            echo "Error executing SQL query.";
+            echo "Image file not uploaded.";
         }
     } else {
         echo "Title and content are required.";
     }
 }
+
 ?>
 
 <!DOCTYPE html>
