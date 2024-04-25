@@ -1,18 +1,16 @@
 <?php
-
 /*******w******** 
-    
-    Name: Dylan Potton
-    Date: 4/22/2024
-    Description: Project - Final
+   
+   Name: Dylan Potton
+   Date: 4/22/2024
+   Description: Project - Final
 
 ****************/
 
+session_start();
 
 // Check if the login form is submitted
-if ($_SERVER["REQUEST_METHOD"] === "POST") 
-{
-
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
     require('connect.php');
     require('authenticate.php');
 
@@ -20,23 +18,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST")
     $password = $_POST['password'];
 
     // Validate the username and password
-    if (!empty($username) && !empty($password)) 
-    {
+    if (!empty($username) && !empty($password)) {
         // Check if given username and password match the admin creds
-        if ($username === ADMIN_LOGIN && password_verify($password, password_hash(ADMIN_PASSWORD, PASSWORD_DEFAULT))) 
-        {
+        if ($username === ADMIN_LOGIN && password_verify($password, password_hash(ADMIN_PASSWORD, PASSWORD_DEFAULT))) {
             $_SESSION['user_id'] = 1; 
             $_SESSION['username'] = $username;
             header("Location: index.php");
             exit();
-        } 
-        else 
-        {
+        } else {
             $error = "Invalid username or password.";
         }
-    } 
-    else 
-    {
+    } else {
         $error = "Please enter both username and password.";
     }
 }
@@ -61,5 +53,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST")
         <input type="password" id="password" name="password" required><br><br>
         <button type="submit">Login</button>
     </form>
+    
+    <!-- Registration Button -->
+    <p>Don't have an account? <a href="register.php">Register</a></p>
 </body>
 </html>
