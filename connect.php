@@ -14,4 +14,4 @@
          print "Error: " . $e->getMessage();
          die(); // Force execution to stop on errors.
      }
- ?>7
+ ?>
