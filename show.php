@@ -10,24 +10,19 @@
 
 require('connect.php');
 
-// Retrieve the blog to be displayed
 if(isset($_GET['id']))
 {
-    //Sanitize the id
     $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-    // Build the SQL query with the filtered id
     $query = "SELECT * FROM blog WHERE id = :id";
     $statement = $db->prepare($query);
     $statement->bindValue(':id', $id, PDO::PARAM_INT);
 
-    // Execute the select query and fetch the entry returned
     $statement->execute();
     $blog = $statement->fetch();
 }
 else
 {
-    // Does not return an entry 
     $id = false;
 }
 

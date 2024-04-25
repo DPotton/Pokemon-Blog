@@ -1,4 +1,13 @@
 <?php
+
+/*******w******** 
+    
+    Name: Dylan Potton
+    Date: 4/22/2024
+    Description: Project - Final
+
+****************/
+
 // Define an array of question prompts
 $questionPrompts = [
     "What's your favorite Pokémon and why?",

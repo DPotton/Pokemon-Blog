@@ -1,5 +1,13 @@
 <?php
 
+/*******w******** 
+    
+    Name: Dylan Potton
+    Date: 4/22/2024
+    Description: Project - Final
+
+****************/
+
 require('connect.php');
 require('authenticate.php');
 
@@ -15,13 +23,6 @@ if($_POST && !empty($_POST['title']) && !empty($_POST['content']))
 
     // Submit query to the database
     $db->query($query);
-
-    // Execute the update
-    // execute() will check for possible SQL injection and remove if necessary
-    /*if($statement->execute())
-    {
-        echo "Success";
-    }*/
 
     header("Location: index.php");
     exit;

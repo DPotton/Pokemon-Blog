@@ -6,8 +6,6 @@
 
 -->
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,10 +44,9 @@ try
     $sortBy = isset($_GET['sort']) ? $_GET['sort'] : 'pokemonID';
     $validSortOptions = ['type', 'name']; // Valid sorting options
     $sortBy = in_array($sortBy, $validSortOptions) ? $sortBy : 'pokemonID';
-
     $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
-    // Retrieve data from the "pokemon" table with sorting and searching
+    // Retrieve data from the Pokemon table 
     $sql = "SELECT * FROM pokemon WHERE name LIKE :searchTerm ORDER BY $sortBy";
     $stmt = $db->prepare($sql);
     $stmt->bindValue(':searchTerm', "%$searchTerm%");

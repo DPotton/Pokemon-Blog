@@ -1,4 +1,13 @@
  <?php
+
+ /*******w******** 
+    
+    Name: Dylan Potton
+    Date: 4/22/2024
+    Description: Project - Final
+
+****************/
+
      define('DB_DSN','mysql:host=localhost;dbname=serverside;charset=utf8');
      define('DB_USER','serveruser');
      define('DB_PASS','gorgonzola7!');     

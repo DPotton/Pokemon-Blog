@@ -8,33 +8,40 @@
 
 ****************/
 
-
 require('connect.php');
 
-// Determine the sorting order based on the 'sort' parameter in the URL
-$sort = isset($_GET['sort']) ? $_GET['sort'] : 'desc'; // Default to descending order
+$sort = isset($_GET['sort']) ? $_GET['sort'] : 'desc';
 
 // Validate the sorting order
 $validSorts = array('asc', 'desc');
-if (!in_array($sort, $validSorts)) {
-    // If an invalid sorting order is provided, fallback to descending order
+
+if (!in_array($sort, $validSorts)) 
+{
     $sort = 'desc';
 }
 
 // SQL query modified to include sorting order
 $query = "SELECT * FROM blog ORDER BY date_posted $sort";
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
-if (!empty($searchTerm)) {
+
+if (!empty($searchTerm)) 
+{
     $query = "SELECT * FROM blog WHERE title LIKE :search OR content LIKE :search ORDER BY date_posted $sort";
 }
-$query .= " LIMIT 10";
 
+$query .= " LIMIT 10";
 $statement = $db->prepare($query);
-if (!empty($searchTerm)) {
+
+if (!empty($searchTerm)) 
+{
     $searchTerm = "%$searchTerm%";
     $statement->bindParam(':search', $searchTerm, PDO::PARAM_STR);
 }
+
 $statement->execute();
+
+
+
 ?>
 
 <!DOCTYPE html>

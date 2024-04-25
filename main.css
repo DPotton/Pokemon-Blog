@@ -68,7 +68,7 @@ footer {
     width: 100%;
 }
 
-header {
+.header {
     position: fixed;
     top: 0;
     left: 0;

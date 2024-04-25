@@ -1,4 +1,13 @@
 <?php
+
+/*******w******** 
+    
+    Name: Dylan Potton
+    Date: 4/22/2024
+    Description: Project - Final
+
+****************/
+
 // Start the session
 session_start();
 
@@ -10,5 +19,5 @@ session_destroy();
 
 // Redirect to a login page or another appropriate page
 header("Location: login.php");
-exit; // Make sure to exit after redirection
+exit; 
 ?>

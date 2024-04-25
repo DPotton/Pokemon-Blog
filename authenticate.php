@@ -1,5 +1,13 @@
  <?php
 
+/*******w******** 
+    
+    Name: Dylan Potton
+    Date: 4/22/2024
+    Description: Project - Final
+
+****************/
+
   define('ADMIN_LOGIN','wally');
 
   define('ADMIN_PASSWORD','mypass');

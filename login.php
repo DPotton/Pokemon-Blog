@@ -1,31 +1,42 @@
 <?php
-// Check if the login form is submitted
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Include your database connection file (connect.php)
-    require('connect.php');
+
+/*******w******** 
     
-    // Include your authentication file (authenticate.php)
+    Name: Dylan Potton
+    Date: 4/22/2024
+    Description: Project - Final
+
+****************/
+
+
+// Check if the login form is submitted
+if ($_SERVER["REQUEST_METHOD"] === "POST") 
+{
+
+    require('connect.php');
     require('authenticate.php');
 
-    // Get username and password from the form
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Validate the username and password (you can add more validation logic here)
-    if (!empty($username) && !empty($password)) {
-        // Check if the provided username and password match the admin credentials
-        if ($username === ADMIN_LOGIN && password_verify($password, password_hash(ADMIN_PASSWORD, PASSWORD_DEFAULT))) {
-            // Username and password are correct, set session variables
-            $_SESSION['user_id'] = 1; // Set a dummy user_id for admin
+    // Validate the username and password
+    if (!empty($username) && !empty($password)) 
+    {
+        // Check if given username and password match the admin creds
+        if ($username === ADMIN_LOGIN && password_verify($password, password_hash(ADMIN_PASSWORD, PASSWORD_DEFAULT))) 
+        {
+            $_SESSION['user_id'] = 1; 
             $_SESSION['username'] = $username;
-
-            // Redirect to the home page
             header("Location: index.php");
             exit();
-        } else {
+        } 
+        else 
+        {
             $error = "Invalid username or password.";
         }
-    } else {
+    } 
+    else 
+    {
         $error = "Please enter both username and password.";
     }
 }
