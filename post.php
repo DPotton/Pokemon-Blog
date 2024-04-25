@@ -11,6 +11,19 @@
 require('authenticate.php');
 require('connect.php');
 
+// Function to resize image
+function resizeImage($filename, $newWidth, $targetFile) {
+    list($width, $height) = getimagesize($filename);
+    $ratio = $width / $height;
+    $newHeight = $newWidth / $ratio;
+    $src = imagecreatefromstring(file_get_contents($filename));
+    $dst = imagecreatetruecolor($newWidth, $newHeight);
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+    imagedestroy($src);
+    imagejpeg($dst, $targetFile); // Change to imagepng or imagegif if needed
+    imagedestroy($dst);
+}
+
 // Fetch the highest post_id from the database
 $query = "SELECT MAX(post_id) AS max_post_id FROM blog";
 $result = $db->query($query);
@@ -54,18 +67,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 
                 // Move uploaded file to uploads directory
                 if (move_uploaded_file($tmp_file, $upload_directory . $client_filename)) {
-                    // File uploaded successfully
-                    echo "File uploaded successfully.";
-                
+                    // Resize the uploaded image
+                    $resized_filename = $upload_directory . 'resized_' . $client_filename;
+                    resizeImage($upload_directory . $client_filename, 200, $resized_filename);
+
                     // Store the file path/name in the database
-                    $photo_path = $upload_directory . $client_filename;
-                    $query = "INSERT INTO blog (post_id, title, content, photo) VALUES (:post_id, :title, :content, :photo)";
+                    $photo_path = $resized_filename;
+                    $query = "UPDATE blog SET photo = :photo WHERE post_id = :post_id";
                     $statement = $db->prepare($query);
-                    $statement->bindValue(':post_id', $next_post_id);
-                    $statement->bindValue(':title', $title);
-                    $statement->bindValue(':content', $content);
                     $statement->bindValue(':photo', $photo_path);
+                    $statement->bindValue(':post_id', $next_post_id);
                     $statement->execute();
+                    
+                    // Remove the original uploaded file
+                    unlink($upload_directory . $client_filename);
                 } else {
                     // Error while uploading file
                     echo "Error uploading file.";
@@ -90,29 +105,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 </head>
 <body>
 
-        <?php include('nav.php'); ?>
+    <?php include('nav.php'); ?>
 
     <main class="container_edit" id="create-post">
-    <form action="post.php" method="POST" enctype="multipart/form-data">
-    <h2>Create a new Post for other fans to see!</h2>
-    <div class="form-group">
-        <label for="title">Add your Title!</label>
-        <input type="text" name="title" id="title" minlength="1" required>
-    </div>
+        <form action="post.php" method="POST" enctype="multipart/form-data">
+            <h2>Create a new Post for other fans to see!</h2>
+            <div class="form-group">
+                <label for="title">Add your Title!</label>
+                <input type="text" name="title" id="title" minlength="1" required>
+            </div>
 
-    <div class="form-group">
-        <label for="content">Toss in some words!</label>
-        <textarea name="content" id="content" cols="80" rows="15" minlength="1" required></textarea>
-    </div>
+            <div class="form-group">
+                <label for="content">Toss in some words!</label>
+                <textarea name="content" id="content" cols="80" rows="15" minlength="1" required></textarea>
+            </div>
 
-    <div class="form-group">
-        <label for="image">Upload an Image</label>
-        <input type="file" name="image" id="image">
-    </div>
+            <div class="form-group">
+                <label for="image">Upload an Image</label>
+                <input type="file" name="image" id="image">
+            </div>
 
-    <button type="submit" class="button-primary" name="submit">Submit!</button>
-</form>
-
+            <button type="submit" class="button-primary" name="submit">Submit!</button>
+        </form>
     </main>
 
     <?php include('footer.php'); ?>

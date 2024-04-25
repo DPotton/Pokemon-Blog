@@ -79,9 +79,8 @@ $statement->execute();
     <small><a href="edit.php?id=<?=$row['id']?>" class="blog-post-edit">Edit</a></small>
     <small><a href="delete.php?id=<?=$row['id']?>" class="blog-post-delete">Delete</a></small>
     <small class="blog-post-date">
-        Caught on: <time datetime="<?=$row['date_posted']?>">
-            <?=date_format(date_create($row['date_posted']), 'F j, Y G:i') ?>
-        <time>
+        Caught on: <time datetime="<?=$row['date_posted']?>"><?=
+        date_format(date_create($row['date_posted']), 'F j, Y G:i') ?><time>
         &ensp;
     </small> <br>
     <p class="blog-post-content">
