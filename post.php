@@ -30,8 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-        // File upload handling
-        if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+        // Check if an image was uploaded
+        $hasImage = isset($_FILES["image"]) && $_FILES["image"]["error"] == 0;
+
+        // Only process image upload if an image was uploaded
+        if ($hasImage) {
             $client_filename = $_FILES["image"]["name"];
             $tmp_file = $_FILES["image"]["tmp_name"];
             $upload_directory = 'uploads/';
@@ -64,7 +67,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                 echo "Error uploading file.";
             }
         } else {
-            echo "Image file not uploaded.";
+            // No image uploaded, proceed with inserting post without an image
+            $query = "INSERT INTO blog (title, content) VALUES (:title, :content)";
+            $statement = $db->prepare($query);
+
+            // Bind values to the parameters
+            $statement->bindValue(':title', $title);
+            $statement->bindValue(':content', $content);
+
+            // Execute the insert
+            if ($statement->execute()) {
+                // Redirect after successful submission
+                header("Location: index.php");
+                exit;
+            } else {
+                echo "Error executing SQL query.";
+            }
         }
     } else {
         echo "Title and content are required.";

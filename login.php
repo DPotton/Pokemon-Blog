@@ -13,6 +13,7 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     require('connect.php');
     require('authenticate.php');
+    
 
     $username = $_POST['username'];
     $password = $_POST['password'];
